@@ -94,6 +94,7 @@ Collision Objects
 When you first selected an object to add a stream, you were probable greeted with the option to either set it as Emitter or set it as Collision. That's because navigating down to the physics tab for collision objects felt tedious and disjointed when everything else is in one single pannel. Thanks to my lazyness, you can also easily controll collision objects from within the addon as well.
 
 (Also node that collision objects will also interact with cloth and softbody simulations. Sorry, I wish it didn't but that's out of my hands.)
+
 ![Compound Material Example](CollisionObjectMenue.png)
 
 - Set as/Disable Collision: This'll tell blender to use this object for collisions rather than as an emitter. If there isn't already a collision modifier, then it'll add a collision modifier to the bottom of your modifier stack, so be sure to move it to the right place if need be (as super high poly collision objects will slow things down significantly for very little benefit). Disableing collision will also delete the collision modifier from the object.
@@ -119,9 +120,8 @@ As you blender doesn't let you directly blend between multiple materials, there 
   - Fluid Materal: This can be whatever you want to use for your fluid, a Principled BSDF shader, a Glass shader, or even just an RGB value. The only things it can't be are volume nodes, as blender doesn't yet allow you to controll volumes through geometry nodes assigned attributes (outside of instancer attributes, which the "Fluid #" ones are not). If you material is really big/has a lot of nodes, it might help to put it inside a group to keep things a bit cleaner.
   - Lastle, an Add Shader Node: This is to let the other materials show on vertices they are assigned to without having to sweep though Material IDs like using a Mix Shader would require. Connect the output of the mix shader node to this, either input is fine (though you can technically skip this node for the first material).
 
-4) Copy this over for as many materials you want to use, changing the Attribute node to the proper material ID each time. At the end if it all, your material should look something like this:
+4) Copy this over for as many materials you want to use, changing the Attribute node to the proper material ID each time. At the end if it all, your material should look something like this:   ![Compound Material Example](CompoundMaterialExample.png)
 
-![Compound Material Example](CompoundMaterialExample.png)
 5) In you emitters, under the render settings tab, a new paramater called "Material ID" should've appeared. You can change that to use whichever material inside your compound material that you want. And with that, you're all set. Blender will now automatically blend between these material when streams collide.
 
 Though if you still want to use the provided material paramaters in the addon, then you simply need to add the corrosponding attribute for them:
