@@ -1,21 +1,21 @@
 Fluid-Particles
 ===
-A simple tool to create small quick fluid sims in blender. 
+A simple tool to create quick fluid sims in blender. 
 ---
 
 Creating detailed fluid simulations is well known to be a long and arduous process, and even more so in blender, but will give you beautiful results when working on larger scales with lots of fluid. But what if you don't need all that? What if you just need a quick small scale fluid sim? Thankfully, that's what this addon is intended for.
 
-This addon utilizes Blender's particle system's Fluid physics type and is simply designed to be a quick and easy to setup, adjust, and control multiple sims at once in, what would otherwise be, a confusing and convoluted method of simulating fluid. Designed primarily to be able to add multiple sims that all interact with each other, and automatically set up a fluid surface mesh to render out the fluid and support blending between multiple fluid types.
+This addon utilizes Blender's particle system's Fluid physics type and is simply designed to be a quick and easy to setup, adjust, and control multiple sims at once in what would otherwise be a confusing and convoluted method of simulating fluid. Designed primarily to be able to add multiple sims that all interact with each other, and automatically set up a fluid surface mesh to render out the fluid and support blending between multiple fluid types.
 
 How To Use
 ===
 The addon is split up into 3 different tabs: Simulation Settings, Animation Settings, and Render Settings.
-(Simply listed as "Simulate", "Animate", and "Render" since space is limited.)
+(Simply listed as "Sim Settings", "Animation", and "Render Settings" since space is limited.)
 ![Fluid Particles Screenshot](FluidParticlesMenues.png)
 
 Simulation Settings
 ---
-All of these sections are pretty self-explanatory, but this tab is where you'll be controlling the simulation parameters, anything and everything that defines how the fluid will react to the world.
+All of these sections are pretty self-explanatory, but this tab is where you'll be controlling the fluid parameters. Everything and anything that defines how the fluid will react to the world, as well as itself, is here.
 
 - Streams: Where you'll add/remove particle systems (or "Streams" as I like to call them) from an emitter, as well as control:
   - Particle count: How many particles this stream will emit. This is probably the biggest downside to this method; you have to define exactly how many particles to use as it won't automatically adjust for you.
@@ -32,26 +32,34 @@ All of these sections are pretty self-explanatory, but this tab is where you'll 
  - Cache to Bake/Unbake Emitter: Will save the playback cache for all streams in each selected emitter or delete all bakes in the selected emitter (if currently selected stream is already baked.)
  - Bake/Unbake All Physics: Will bake all physics of any type in the scene. This includes particle systems, cloth simulations, soft bodies, rigid bodies, etc. (Ideal if you're either only working with fluid sims or want to bake other sim types simultaneously for accurate interactions.)
 
-- Recalculate: Think of this as a panic button, if something goes wrong with the simulation, this'll force all streams on an emitter to reset, clear they're bakes and playback caches, rebuild links to other streams, and set the frame to the start of the simulation.
-- Copy Settings: This'll copy all settings below from the active emitter to other selected emitters, with the exception of:
-
-- Particle Catcher: This'll add an invisible plane that'll kill any particles that collide with it, meant to delete particles that go off screen or form hurting performance as they endlessly falling into oblivion. (Note that it won't delete particles that are below it, only ones that try to pass said height, so particles that spawn below it won't be deleted.)
+- Recalculate: Think of this as a panic button, if something goes wrong with the simulation, this'll force all streams on an emitter to reset, clear they're bakes and/or playback caches, rebuild links to other streams, and set the frame to the start of the simulation.
+- Copy Settings: This'll copy all settings below from the active emitter to other selected emitters.
 
 - Lifetime: How long the particles will live for. Set to your scene's end frame if you never want them to die. Alternatively, you can add some randomness to when they die to help them fizzle out rather than die at an exact time after being spawned (useful for creating looping animations.)
 
-- Size: How big the particles are. This'll also affect how close they can get to collision objects.
+- Particle Radius: How big the particles are. This'll also affect how close they can get to collision objects.
+- Interaction Distance: This defines how close particles must be to interact with eachother, based on their Radius. This does not effect how they react to collision objects.
 
-- SubFrames: How frequently blender should calculate the simulation between each frame. Since fluid sims are much more complicated than normal particle simulations, it's important to give blender some leeway to calculate things. Alternatively, you can tell blender to automatically add subframes where need be by setting a threshold (though it'll usually be a bit slower to simulate than if you just set the subframe count manually).
-
-- Mass: How heavy the particles are. This only affects how different streams interact with each other. i.e., a lighter fluid will displace a heavier fluid.
-- Viscosity: How **thicc** the fluid is. (It has something to do with internal friction, but just think of it as a consistency slider that goes from water to honey).
-- Radius: This defines how many times larger than the size each particle is and, unlike the size parameter, only affects how particles interact with each other and not how they react to collision objects. (If the difference between this and Size is lost on you, then just leave this at 2 and only adjust the size parameter.
 - Stiffness: How incompressible the fluid is.
-- Repulsion: How much particles push away from each other (based on Stiffness).
-- Density: How much particles are allowed to intersect with each other. (Useful when used in tandem with Radius.)
+- Repulsion: How much particles push away from each other. Linked to Stiffness by default, but clicking on the title "Stiffness (Factored Repulsion)" will unlink them or vice versa.
+
+- Viscosity: How **thicc** the fluid is during either compression or expansion. By default both are controlled together, but clicking on the title "Viscosity (Linked)" will unlink them or vice versa.
+  - Compression: How much the fluid resist shearing.
+  - Expansion: How much the fluid resist being pulled appart.
+
+- Rest Density: How much particles are allowed to intersect with each other. (Useful when used in tandem with Radius.)
+
+- Mass: How heavy the particles are. Primairly useful when you have 2 different fluids of different masses. i.e., a heavier fluid will displace a lighter fluid.
+
+- Stickyness: How much the particles stick together/attract eachother after previously colliding.
+
+- Particle Catcher: This'll add an invisible plane that'll kill any particles that collide with it, meant to delete particles that go off screen from hurting performance as they endlessly fall into oblivion. (Note that it won't delete particles that are below it, only ones that try to pass said height, so particles that spawn below it won't be deleted. This also won't be copied over to other emitters since it's secretly a global scene setting.)
 
 - Gravity: How much particles are affected by gravity.
 - Force Fields: How much particles are affected by other forces (excluding collision objects).
+
+- Simulation Speed: How fast the particles are. Higher speeds will require more subframes as the particles will move more each frame than at lower speeds.
+- SubFrames: How frequently blender should calculate the simulation between each frame. Since fluid sims are much more complicated than normal particle simulations, it's important to give blender some leeway to calculate things.
 
 Animation Settings
 ---
@@ -64,19 +72,19 @@ If you've noticed that the particles don't emit at a consistent speed, don't wor
 
 Render Settings
 ---
-This tab is where you'll control the fluid surface. Keep in mind that these settings are universal and aren't based on the streams at all, outside of the box of material parameters at the bottom that are unique to each emitter. Because of this, you can access these settings regardless of what object is selected, or even if no object is selected at all.
+This tab is where you'll control the fluid surface as well as material parameters for emitter's fluid. Keep in mind that these settings are universal and aren't based on the streams at all, outside of the box of material parameters at the bottom that are unique to each emitter. Because of this, you can access these settings from any emitter or even the fluid surface itself (as this is the only tab the fluid surface has).
 
-- Fix Surface: Reimport the fluid surface, its default material, and the hidden instance objects that might've gotten broken when deleting an emitter.
+- Fix Surface: Reimport the fluid surface, its default material, the default custom material template, as well as any hidden objects or parameters that might've gotten broken when deleting an emitter.
 
 - Size Multiplier: How many times larger than the particle's radius should they render as. (Useful for offsetting the smoothing effect the fluid surface provides.)
 - Quality: The density of vertices the fluid surface will have (relative to the smallest radius of all emitters).
-- Viewport Display: Defines the quality of the fluid in the viewport (relative to the quality setting above). Setting this to 0 will hide the fluid surface altogether in the viewport and keep from calculating it at all (as it can be quite slow at times), but will continue to show the particles for each fluid as a lightweight visualization. I recommend leaving this off anytime you don't actively need to see the fluid surface itself.
+- Viewport Display (**Does Not Effect The Render!**): Defines the quality of the fluid in the viewport (relative to the quality setting above). Setting this to 0 will hide the fluid surface altogether in the viewport and keep from calculating it at all (as it can be quite slow at times), but will continue to show the particles for each fluid as a lightweight visualization. I recommend leaving this off or at around 0.5 anytime you are adjusting Simulation parameters or working on something else, and around 0.5 anytime you don't actively need to see the fluid surface in great detail.
 
 - Smoothing: How much the surface will be smoothed over, to make it look more fluid like at the cost of minor artifacts when particles are barely touching in weird ways.
 
 - Material Blending: Blends the material parameters for each emitter together wherever the streams interact.
 
-- Custom Material: Where you can create your own material to use instead of the default one, though blender has no way of blending between materials so you can only set one. You can create a compound material that'll manage different materials. More info on how to do that is below. (Note that the active fluid material is also set on each emitter object for ease of access, so feel free to alter it however you like.)
+- Custom Material: Where you can create your own material to use instead of the default one. Since blender has no way of nativly blending between materials, you can only set one. I've included a template material (simply named "FP - Custom Fluid Template") so you can easily create a compound material that'll manage different materials. More info on how to do that is below. (Note that the active fluid material is also set on each emitter object for ease of access, so feel free to alter it however you like.)
 
 Material Parameters (relative to each emitter):
 - Material ID (Only available with a Custom Material set): This'll let you switch between sections of a compound material. More info below.
@@ -91,45 +99,33 @@ Material Parameters (relative to each emitter):
 
 Collision Objects
 ---
-When you first selected an object to add a stream, you were probably greeted with the option to either set it as Emitter or set it as Collision. That's because navigating down to the physics tab for collision objects felt tedious and disjointed when everything else is in one single panel. Thanks to my laziness, you can also easily control collision objects from within the addon as well.
+This addon utilizes blender's normal collision settings. Enable it as you would enable collision for object you want to collide with things like cloth. (Also, keep in mind that collision objects will also interact with cloth and soft body simulations. Sorry, I wish it didn't but that's out of my hands.)
 
-(Also, node that collision objects will also interact with cloth and soft body simulations. Sorry, I wish it didn't but that's out of my hands.)
+![Collision Menue](CollisionObjectMenue.png)
 
-![Compound Material Example](CollisionObjectMenue.png)
+(The Particle section is the only one that matters here).
 
-- Set as/Disable Collision: This'll tell blender to use this object for collisions rather than as an emitter. If there isn't already a collision modifier, then it'll add a collision modifier to the bottom of your modifier stack, so be sure to move it to the right place if need be (as super high poly collision objects will slow things down significantly for little benefit). Disabling collision will also delete the collision modifier from the object.
-
-- Cage: If your object is fairly high poly and you have a lower poly version you want to use for collisions instead, you can set the low poly version as a collision cage. This'll remove the collision modifier from your main object and add one to the cage instead. (Note that the following settings will be visible on both the original object and the cage object:)
-
+- Permeability: How likely each particle is to pass through the collision object (calculated every frame).
 - Damping: How much the collision object will prevent particles from bouncing off it. (Recommend Value: 0.75)
 - Friction: How much the collision object will prevent particles from sliding across it. (Recommend Value: 0.25)
-- Permeability: How likely each particle is to pass through the collision object (calculated each frame).
-- Stickiness: How much particles will stick to the collision object (i.e. overhangs).
+- Stickiness: How much particles will stick to the collision object (i.e. overhangs. Recommend Value: 0-0.5).
 
 Setting Up a Compound Material
 ===
-As blender doesn't let you directly blend between multiple materials, there isn't a way for me to easily let you assign materials to different emitters. However, I did add attributes to help you create your own Compound Materials (a material with multiple different materials inside of it). It's a bit of a process to set up, but hopefully I can help simplify it a small bit and make it a viable option for people to do. (Do keep in mind that if you only need a single material for all your fluids, then this process isn't at all necessary.)
+As blender doesn't let you directly blend between multiple materials, there isn't a way for me to easily let you assign materials to different emitters. However, I did add attributes to help you create your own Compound Materials (a material with multiple different materials inside of it). The addon comes included with a template material that is automatically loaded in with your fluid surface. (Do keep in mind that if you only need a single material for all your fluids, then this process isn't at all necessary.)
 
-1) Under any emitter or the fluid surface itself, go to the material properties tab and unlink the "Default Fluid Mat" material (the little X icon next to the name) then add a new material in its place. Alternatively, you can duplicate the default material and adjust it to work with this method, though I'll be starting from a blank slate for this.
+1) In the fluid particles panel, under Render Settings, set the Custom Material to the included "FP - Custom Fluid Template" material. We do this early just to make sure that the addon won't set it back to the default material when you adjust anything in the addon.
 
-2) In the fluid particles panel, under Render Settings, set your newly made material as the Custom Material. We do this early just to make sure that the addon won't set it back to the default material when you adjust anything in the addon.
+1.5) Alturnatively, if you want to make your own material from scratch, then under any emitter or the fluid surface itself, go to the material properties tab and unlink the "Default Fluid Mat" material (the little X icon next to the name) then add a new material in its place.
+
+2) With an emitter selected (not the fluid surface), under the addon's render settings tab, a new parameter called "Material ID" should've appeared. You can change that to use whichever material inside your compound material that you want.
 
 3) Now we'll open the shader editor and finally start making the compound material. The setup is fairly straightforward, consisting of 4 main parts:
-  - An Attribute Node: This is what we'll use to define if an emitter will use this material or another. We'll set this to "Fluid 1", where the 1 is for emitters with a Material ID of 1. This'll be connected to the factor of a
-  - Mix Shader Node: This is for limiting our material to only apply to streams set to the right Material ID, which in this case is an ID of "1". The first shader input will be left empty, while the second is where we'll connect our
-  - Fluid Material: This can be whatever you want to use for your fluid, a Principled BSDF shader, a Glass shader, or even just an RGB value. The only things it can't be are volume nodes, as blender doesn't yet allow you to control volumes through geometry nodes assigned attributes (outside of instancer attributes, which the "Fluid #" ones are not). If your material is really big/has a lot of nodes, it might help to put it inside a group to keep things a bit cleaner.
-  - Lastly, an Add Shader Node: This is to let the other materials show on vertices they are assigned to without having to sweep though Material IDs like using a Mix Shader would require. Connect the output of the mix shader node to this, either input is fine (though you can technically skip this node for the first material).
+  - Our Fluid Material: This can be whatever you want to use for your fluid, a Principled BSDF shader, a Glass shader, or even just an RGB value. The only things it can't be are volume nodes, as blender doesn't yet allow you to control volumes through geometry node's assigned attributes (outside of instancer attributes, which the Material ID's are not). If your material is really big/has a lot of nodes, it might help to put it inside a group to keep things a bit cleaner.
+  - The Included "FP Attributes" Node: This is purely optional, but this is how you can use the material attributes assigned in the addon's "Render Settings" tab.
+  - The Included "Mix Fluid" node: This is were we'll connect our material's output (in this case the Principled BSDF's output) into the bottom input labled "This Shader." And most importantly,
+  - An Attribute Node: This is where we'll get the mask for each Material ID, using the attributes "Fluid #" for each material. We'll set the first one to "Fluid 1", where the 1 is for emitters with a Material ID of 1, and the next to "Fluid 2" for a Material ID of 2.
 
-4) Copy this over for as many materials you want to use, changing the Attribute node to the proper material ID each time. At the end if it all, your material should look something like this:   ![Compound Material Example](CompoundMaterialExample.png)
+4) We can add these in series to have as many different fluid materials as we want, connecting our Mix Fluid node's output to the "Last Shader" input of the next Mix Fluid Node. Copy this over for as many materials you want to use, changing the Attribute node to the proper material ID each time. At the end if it all, your material should look something like this:   ![Compound Material Example](CompoundMaterialExample.png)
 
-5) In you emitters, under the render settings tab, a new parameter called "Material ID" should've appeared. You can change that to use whichever material inside your compound material that you want. And with that, you're all set. Blender will now automatically blend between these materials when streams collide.
-
-Though if you still want to use the provided material parameters in the addon, then you simply need to add the corresponding attribute for them:
-Attribute | Type
---- | ---
-Colour | Color value
-Roughness | Float value
-Density | Float value
-Emission Colour | Color value
-Emission Strength | Float value
-Volume Density | (Instancer) Float value
+And with that, you're all set. Blender will now automatically blend between these materials when streams collide.
