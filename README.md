@@ -11,7 +11,7 @@ How To Use
 ===
 The addon is split up into 3 different tabs: Simulation Settings, Animation Settings, and Render Settings.
 (Simply listed as "Sim Settings", "Animation", and "Render Settings" since space is limited.)
-![Fluid Particles Screenshot](FluidParticlesMenues.png)
+![Fluid Particles Screenshot](Images/FluidParticlesMenus.png)
 
 Simulation Settings
 ---
@@ -101,7 +101,7 @@ Collision Objects
 ---
 This addon utilizes blender's normal collision settings. Enable it as you would enable collision for object you want to collide with things like cloth. (Also, keep in mind that collision objects will also interact with cloth and soft body simulations. Sorry, I wish it didn't but that's out of my hands.)
 
-![Collision Menue](CollisionObjectMenue.png)
+![Collision Menue](Images/CollisionObjectMenu.png)
 
 (The Particle section is the only one that matters here).
 
@@ -126,6 +126,6 @@ As blender doesn't let you directly blend between multiple materials, there isn'
   - The Included "Mix Fluid" node: This is were we'll connect our material's output (in this case the Principled BSDF's output) into the bottom input labled "This Shader." And most importantly,
   - An Attribute Node: This is where we'll get the mask for each Material ID, using the attributes "Fluid #" for each material. We'll set the first one to "Fluid 1", where the 1 is for emitters with a Material ID of 1, and the next to "Fluid 2" for a Material ID of 2.
 
-4) We can add these in series to have as many different fluid materials as we want, connecting our Mix Fluid node's output to the "Last Shader" input of the next Mix Fluid Node. Copy this over for as many materials you want to use, changing the Attribute node to the proper material ID each time. At the end if it all, your material should look something like this:   ![Compound Material Example](CompoundMaterialExample.png)
+4) We can add these in series to have as many different fluid materials as we want, connecting our Mix Fluid node's output to the "Last Shader" input of the next Mix Fluid Node. Copy this over for as many materials you want to use, changing the Attribute node to the proper material ID each time. At the end if it all, your material should look something like this:   ![Compound Material Example](Images/CompoundMaterialExample.png)
 
 And with that, you're all set. Blender will now automatically blend between these materials when streams collide.
