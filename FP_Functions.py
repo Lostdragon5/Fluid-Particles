@@ -111,8 +111,8 @@ def SetInput(Mod, Name, Value):
 	if Socket.value != Value: Socket.value = Value
 	return True
 
-def CreateStream(context, O, OBJTools):
-	Frame = context.scene.frame_current
+def CreateStream(context, O, OBJTools, Frame = None):
+	if Frame is None: Frame = context.scene.frame_current
 	if OBJTools.Enabled: Frame = max(Frame, OBJTools.MyList[-1].System.frame_end)
 	else: O.data.materials.clear()
 	Stream = OBJTools.MyList.add()
