@@ -9,13 +9,15 @@ class AddStreamOps(bpy.types.Operator):
 	bl_options = {'UNDO'}
 
 	def execute(self, context):
+		# SafeAdjust rewinds the playhead, so remember where the user actually was.
+		Frame = context.scene.frame_current
 		if SafeAdjust(context): return {'CANCELLED'}
 
 		O = context.object
 		OBJTools = O.FP_ObjectTools
 		if not OBJTools.Enabled: SetEmitterVisibility(O, False)
 
-		CreateStream(context, O, OBJTools)
+		CreateStream(context, O, OBJTools, Frame)
 		SetStreamValues(context, O, OBJTools, OBJTools.ActiveStream)
 
 		if not context.scene.FP_SceneTools.FluidSurface:
